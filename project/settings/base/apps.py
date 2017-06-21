@@ -8,6 +8,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    # third party apps
+    'webpack_loader',
     'django_extensions',
     'clear_cache',
 

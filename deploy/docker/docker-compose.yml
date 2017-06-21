@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  db:
+    restart: always
+    image: postgres
+    environment:
+      POSTGRES_USER: '{{ project_name }}'
+      POSTGRES_PASSWORD: '{{ secret_key|slugify }}'
+    volumes:
+      - ../../local_files/db/postgres:/var/lib/postgresql/data
+  cache:
+    image: memcached
+  redis:
+    restart: always
+    image: redis
+  rabbitmq:
+    image: rabbitmq
+  worker:
+    image: celery
+    command: celery worker -A tasks --loglevel=INFO
+    volumes:
+      - ../../project/:/code/
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+  beat:
+    image: celery
+    command: celery beat -A tasks --loglevel=INFO
+    volumes:
+      - ../../project/:/code/
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+  backend:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    volumes:
+      - ../../local_files/logs/:/app/logs/
+      - ../../local_files/logs/:/app/logs/
+      - ../../project/:/app/
+    expose:
+      -9000
+    environment:
+      - VIRTUAL_HOST={{ host_address }}
+      - VIRTUAL_PROTO=uwsgi
+    links:
+      - db
+      - cache
+      - rabbitmq
+      - redis
+      - worker
+      - beat
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    count: 1
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro

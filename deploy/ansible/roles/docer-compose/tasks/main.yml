@@ -1,0 +1,5 @@
+---
+- name: docker-compose
+  docker_service:
+    project_src: '/{{ project_name }}/deploy/docker'
+    state: present

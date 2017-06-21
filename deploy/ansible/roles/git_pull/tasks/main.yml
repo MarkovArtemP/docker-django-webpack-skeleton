@@ -1,0 +1,7 @@
+---
+- name: Pull or clone git repo
+  git:
+    dest: "/{{ project_name }}"
+    repo: "{{ git_repo }}"
+    version: "{{ git_branch }}"
+    clone: yes

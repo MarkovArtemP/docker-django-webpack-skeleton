@@ -1,25 +1,14 @@
-# Latest django
+ansible
+celery
 django
-django_extensions
-
-# deploy toolkit
-Fabric
-
-# Debug toolbar
-django-debug-toolbar
-
-# @phpdude libs
-django-macros-url
-django-template-names
-
-# cache
-python-memcached
+djangorestframework
 django-clear-cache
-
-# Database drivers. Uncomment anyone is used.
-#MySQL-python
+django-debug-toolbar
+django-split-settings
+django-webpack-loader
+django_extensions
+Fabric
 #mysqlclient
 psycopg2
-
-# Project custom apps
-django-split-settings
+python-memcached
+redis
